@@ -1,0 +1,35 @@
+{
+  "name": "alaouiib.github.io",
+  "version": "1.0.0",
+  "description": "portfolio app",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alaouiib/abdelhamid-alaoui-portfolio.git"
+  },
+  "keywords": [
+    "portfolio",
+    "data",
+    "science",
+    "AI",
+    "Software",
+    "Engineering",
+    "Looking",
+    "for",
+    "job"
+  ],
+  "author": "alaouiib",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/alaouiib/abdelhamid-alaoui-portfolio/issues"
+  },
+  "homepage": "https://github.com/alaouiib/abdelhamid-alaoui-portfolio#readme",
+  "dependencies": {
+    "ejs": "^3.1.5",
+    "express": "^4.17.1",
+    "node-fetch": "^2.6.1"
+  }
+}
