@@ -333,7 +333,33 @@
                     </div><!--//section-inner-->
                 </aside><!--//section-->
 
-    <script>
+    <script> 
+   // functions        
+   
+window.onload = async function(){
+    
+    //    get ip and send ip to the back end
+            try {
+                const proxyCORS = "https://cors-anywhere.herokuapp.com/"
+                const getIpURL = proxyCORS+"http://gd.geobytes.com/GetCityDetails";
+                const res = await fetch(getIpURL);
+                let { geobytesipaddress: ip } = await res.json();
+                console.log(ip);
+                const res2 = await fetch("/admin/get_visitors",{
+                    
+                method: 'POST', 
+                body: JSON.stringify({ ip }),
+                 headers: {'Content-Type': 'application/json'}
+            
+                });
+
+            } catch (error) {
+                console.log('erreur:');
+                console.log(error);
+            }
+};
+       
+
         const en_cv  = document.querySelector('.is_dow_en');
         const fr_cv  = document.querySelector('.is_dow_fr');
         en_cv.addEventListener('click', async (e)=>{
@@ -349,7 +375,7 @@
             }
   
         })
-fr_cv.addEventListener('click', async (e)=>{
+        fr_cv.addEventListener('click', async (e)=>{
             try {
             const res = await fetch('/admin/downloaded?en=0&fr=1', { 
                 method: 'GET', 
@@ -362,6 +388,8 @@ fr_cv.addEventListener('click', async (e)=>{
             }
   
         })    
+
+     
     </script>
     <!-- Javascript -->
     <script type="text/javascript" src="assets/plugins/jquery-3.4.1.min.js"></script>
