@@ -344,7 +344,7 @@ window.onload = async function(){
                 const getIpURL = proxyCORS+"http://gd.geobytes.com/GetCityDetails";
                 const res = await fetch(getIpURL);
                 let { geobytesipaddress: ip } = await res.json();
-                console.log(ip);
+                // console.log(ip);
                 const res2 = await fetch("/admin/get_visitors",{
                     
                 method: 'POST', 

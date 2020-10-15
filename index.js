@@ -1,5 +1,9 @@
 const express = require("express");
 const app = express();
+require("dotenv").config();
+var API_KEY = process.env["API_KEY"];
+var DOMAIN = "sandbox35661a599b8d41118479a26a2da62b8f.mailgun.org"; // not confidential
+var mailgun = require("mailgun-js")({ apiKey: API_KEY, domain: DOMAIN });
 const fetch = require("node-fetch");
 // middleware
 app.use(express.static("public"));
@@ -35,9 +39,20 @@ const getIPinfo = async (ip) => {
 
   const found = users.some((el) => el.userIP == ip);
   if (!found) {
-    console.log("not found");
+    console.log("not found, New user detected !");
     let newVisitor = { userIP: ip, Nbvisits: 1, infos: infos };
     users.push(newVisitor);
+    // send email notification
+    const data = {
+      from: "News portfolio <coucou@coucou.org>",
+      to: "alaouiib.fstt@gmail.com",
+      subject: `New visitor Notification !`,
+      text: `${JSON.stringify(newVisitor)}`,
+    };
+    mailgun.messages().send(data, (error, body) => {
+      console.log(`message sent successfully !`);
+      console.table(body);
+    });
   } else {
     console.log("found");
     let oldVisitor = users.find((x) => x.userIP == ip);
@@ -57,8 +72,9 @@ app.post("/admin/get_visitors", async function (req, res) {
   // console.log(user_ip);
 
   let new_users = await getIPinfo(user_ip);
-  console.log(new_users);
-  res.json({ users });
+  // console.log(new_users);
+
+  res.json({ new_users });
 });
 let en_count_dl = 0;
 let fr_count_dl = 0;
