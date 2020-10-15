@@ -94,7 +94,9 @@ app.get("/admin/downloaded", (req, res) => {
     });
   }
 });
-
-app.listen(process.env.PORT, "0.0.0.0", () => {
+app.get("/admin/visitors", (req, res) => {
+  res.json({ users });
+});
+app.listen(3000, () => {
   console.log("Listening on 3000");
 });
