@@ -5,15 +5,11 @@ const fetch = require("node-fetch");
 app.use(express.static("public"));
 app.set("view engine", "ejs");
 
-// app.use(express.json());
+app.use(express.json());
 let users = [];
 
-const getIP = async (users) => {
-  const getIpURL = "http://gd.geobytes.com/GetCityDetails";
+const getIPinfo = async (ip) => {
   const getIpInfoURL = "https://api.hackertarget.com/geoip/?q=";
-
-  let res = await fetch(getIpURL);
-  let { geobytesipaddress: ip } = await res.json();
   let resInfoIP = await fetch("https://api.hackertarget.com/geoip/?q=" + ip, {
     headers: {
       accept:
@@ -52,15 +48,17 @@ const getIP = async (users) => {
   return users;
 };
 
-let counter = 0;
+// let counter = 0;
 app.get("/", async function (req, res) {
-  counter++;
-  console.log("ip infos:", await getIP(users));
-  // - get ip and infos about ip
-  // - increment num of visits for each user
-  console.log("visitors:", counter);
   res.render("index");
-  // res.redirect("/visited");
+});
+app.post("/admin/get_visitors", async function (req, res) {
+  let { ip: user_ip } = req.body;
+  // console.log(user_ip);
+
+  let new_users = await getIPinfo(user_ip);
+  console.log(new_users);
+  res.json({ users });
 });
 let en_count_dl = 0;
 let fr_count_dl = 0;
@@ -98,6 +96,6 @@ app.get("/admin/visitors", (req, res) => {
   res.json({ users });
 });
 
-app.listen(process.env.PORT, "0.0.0.0", () => {
-  console.log("Listening on ", process.env.PORT);
+app.listen(3000 || process.env.PORT, "0.0.0.0", () => {
+  console.log("Listening on ", 3000 || process.env.PORT);
 });
