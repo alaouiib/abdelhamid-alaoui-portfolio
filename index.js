@@ -161,3 +161,11 @@ app.get("/admin/visitors", (req, res) => {
 app.listen(process.env.PORT || 3000, "0.0.0.0", () => {
   console.log("Listening on ", process.env.PORT || 3000);
 });
+const request = require("request");
+const ping = () =>
+  request("https://abdelhamid-pro.herokuapp.com/", (error, response, body) => {
+    console.log("error:", error); // Print the error if one occurred
+    console.log("statusCode:", response && response.statusCode); // Print the response status code if a response was received
+    // console.log("body:", body); // Print body of response received
+  });
+setInterval(ping, 20 * 60 * 1000); // I have set to 20 mins interval
