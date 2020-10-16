@@ -1,5 +1,7 @@
 const express = require("express");
 const app = express();
+const fs = require("fs");
+
 require("dotenv").config();
 var API_KEY = process.env["API_KEY"];
 var DOMAIN = "sandbox35661a599b8d41118479a26a2da62b8f.mailgun.org"; // not confidential
@@ -8,10 +10,10 @@ const fetch = require("node-fetch");
 // middleware
 app.use(express.static("public"));
 app.set("view engine", "ejs");
-
 app.use(express.json());
-let users = [];
-
+global.users = {
+  users: [],
+};
 const getIPinfo = async (ip) => {
   const getIpInfoURL = "https://api.hackertarget.com/geoip/?q=";
   let resInfoIP = await fetch("https://api.hackertarget.com/geoip/?q=" + ip, {
@@ -37,30 +39,46 @@ const getIPinfo = async (ip) => {
   });
   let infos = await resInfoIP.text();
 
-  const found = users.some((el) => el.userIP == ip);
-  if (!found) {
-    console.log("not found, New user detected !");
-    let newVisitor = { userIP: ip, Nbvisits: 1, infos: infos };
-    users.push(newVisitor);
-    // send email notification
-    const data = {
-      from: "News portfolio <coucou@coucou.org>",
-      to: "alaouiib.fstt@gmail.com",
-      subject: `New visitor Notification !`,
-      text: `${JSON.stringify(newVisitor)}`,
-    };
-    mailgun.messages().send(data, (error, body) => {
-      console.log(`message sent successfully !`);
-      console.table(body);
-    });
-  } else {
-    console.log("found");
-    let oldVisitor = users.find((x) => x.userIP == ip);
-    oldVisitor.Nbvisits += 1;
-    // console.log(users);
-  }
+  fs.readFile("db.json", "utf8", function readFileCallback(err, data) {
+    if (err) {
+      console.log(err);
+    } else {
+      var obj = JSON.parse(data); //now it an object
+      global.users.users = obj.users;
+      console.log("----");
+      console.log(global.users.users);
+      console.log("----");
+      const found = global.users.users.some((el) => el.userIP == ip);
+      if (!found) {
+        console.log("not found, New user detected !");
+        let newVisitor = { userIP: ip, Nbvisits: 1, infos: infos };
+        global.users.users.push(newVisitor);
+        var json = JSON.stringify(global.users); //convert it back to json
+        fs.writeFile("db.json", json, "utf8", () => {
+          console.log("written to DB successfully !");
+        }); // write it back
+        // send email notification
+        const data = {
+          from: "News portfolio <coucou@coucou.org>",
+          to: "alaouiib.fstt@gmail.com",
+          subject: `New visitor Notification !`,
+          text: `${JSON.stringify(newVisitor)}`,
+        };
+        mailgun.messages().send(data, (error, body) => {
+          console.log(`message sent successfully !`);
+          console.table(body);
+        });
+      } else {
+        console.log("found");
+        let oldVisitor = global.users.users.find((x) => x.userIP == ip);
+        oldVisitor.Nbvisits += 1;
+        // console.log(users);
+      }
+      // console.log(global.users);
+    }
+  });
 
-  return users;
+  return global.users;
 };
 
 // let counter = 0;
@@ -71,7 +89,7 @@ app.post("/admin/get_visitors", async function (req, res) {
   let { ip: user_ip } = req.body;
   // console.log(user_ip);
 
-  let new_users = await getIPinfo(user_ip);
+  let new_users = await getIPinfo(user_ip, users);
   // console.log(new_users);
 
   res.json({ new_users });
@@ -86,6 +104,16 @@ app.get("/admin/downloaded", (req, res) => {
     fr_count_dl += parseInt(fr);
   }
   if (en > 0) {
+    const data = {
+      from: "portfolio news: EN Resume's been downloaded ! <coucou@coucou.org>",
+      to: "alaouiib.fstt@gmail.com",
+      subject: `New en Resume download Notification !`,
+      text: `EN resume has been downloaded ${en_count_dl} times`,
+    };
+    mailgun.messages().send(data, (error, body) => {
+      console.log(`message sent successfully !`);
+      // console.table(body);
+    });
     res.json({
       msg: "Downloads incremented for the English Resume !",
       nb_dow: en_count_dl,
@@ -93,6 +121,16 @@ app.get("/admin/downloaded", (req, res) => {
         "This is just to know how many times my cv got downloaded !",
     });
   } else if (fr > 0) {
+    const data = {
+      from: "portfolio news: French CV's been downloaded ! <coucou@coucou.org>",
+      to: "alaouiib.fstt@gmail.com",
+      subject: `New french CV download Notification !`,
+      text: `FR CV has been downloaded ${fr_count_dl} times`,
+    };
+    mailgun.messages().send(data, (error, body) => {
+      console.log(`message sent successfully !`);
+      // console.table(body);
+    });
     res.json({
       msg: "Downloads incremented for the French CV !",
       nb_dow: fr_count_dl,
@@ -109,7 +147,15 @@ app.get("/admin/downloaded", (req, res) => {
   }
 });
 app.get("/admin/visitors", (req, res) => {
-  res.json({ users });
+  fs.readFile("db.json", "utf8", function readFileCallback(err, data) {
+    if (err) {
+      console.log(err);
+    } else {
+      var users = JSON.parse(data); //now it an object
+      res.json(users);
+    }
+  });
+  // res.json({ users });
 });
 
 app.listen(process.env.PORT || 3000, "0.0.0.0", () => {
