@@ -1,3 +1,4 @@
+const { LOADIPHLPAPI } = require("dns");
 const express = require("express");
 const app = express();
 const fs = require("fs");
@@ -72,10 +73,11 @@ const getIPinfo = async (ip) => {
         console.log("found");
         let oldVisitor = global.users.users.find((x) => x.userIP == ip);
         oldVisitor.Nbvisits += 1;
+        console.log("db:");
         console.log(global.users.users);
-        var json = JSON.stringify(global.users); //convert it back to json
+        var json1 = JSON.stringify(global.users); //convert it back to json
 
-        fs.writeFile("db.json", json, "utf8", () => {
+        fs.writeFile("db.json", json1, "utf8", () => {
           console.log("written to DB successfully !");
         });
         // console.log(users);
