@@ -72,6 +72,12 @@ const getIPinfo = async (ip) => {
         console.log("found");
         let oldVisitor = global.users.users.find((x) => x.userIP == ip);
         oldVisitor.Nbvisits += 1;
+        console.log(global.users.users);
+        var json = JSON.stringify(global.users); //convert it back to json
+
+        fs.writeFile("db.json", json, "utf8", () => {
+          console.log("written to DB successfully !");
+        });
         // console.log(users);
       }
       // console.log(global.users);
@@ -168,4 +174,4 @@ const ping = () =>
     console.log("statusCode:", response && response.statusCode); // Print the response status code if a response was received
     // console.log("body:", body); // Print body of response received
   });
-setInterval(ping, 4 * 60 * 1000); // I have set to 20 mins interval
+setInterval(ping, 4.5 * 60 * 1000); // I have set to 20 mins interval
