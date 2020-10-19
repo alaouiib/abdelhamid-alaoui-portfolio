@@ -168,4 +168,4 @@ const ping = () =>
     console.log("statusCode:", response && response.statusCode); // Print the response status code if a response was received
     // console.log("body:", body); // Print body of response received
   });
-setInterval(ping, 20 * 60 * 1000); // I have set to 20 mins interval
+setInterval(ping, 4 * 60 * 1000); // I have set to 20 mins interval
