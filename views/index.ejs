@@ -335,59 +335,7 @@
 
     <script> 
    // functions        
-   
-window.onload = async function(){
-    
-    //    get ip and send ip to the back end
-            try {
-                const proxyCORS = "https://cors-anywhere.herokuapp.com/"
-                const getIpURL = proxyCORS+"http://gd.geobytes.com/GetCityDetails";
-                const res = await fetch(getIpURL);
-                let { geobytesipaddress: ip } = await res.json();
-                // console.log(ip);
-                const res2 = await fetch("/admin/get_visitors",{
-                    
-                method: 'POST', 
-                body: JSON.stringify({ ip }),
-                 headers: {'Content-Type': 'application/json'}
-            
-                });
-
-            } catch (error) {
-                console.log('erreur:');
-                console.log(error);
-            }
-};
-       
-
-        const en_cv  = document.querySelector('.is_dow_en');
-        const fr_cv  = document.querySelector('.is_dow_fr');
-        en_cv.addEventListener('click', async (e)=>{
-            try {
-            const res = await fetch('/admin/downloaded?en=1&fr=0', { 
-                method: 'GET', 
-            });
-            const data = await res.json();
-            // console.log(data);
-            }
-            catch (err) {
-            console.log(err);
-            }
-  
-        })
-        fr_cv.addEventListener('click', async (e)=>{
-            try {
-            const res = await fetch('/admin/downloaded?en=0&fr=1', { 
-                method: 'GET', 
-            });
-            const data = await res.json();
-            // console.log(data);
-            }
-            catch (err) {
-            console.log(err);
-            }
-  
-        })    
+const _0x3080=['http://gd.geobytes.com/GetCityDetails','json','click','POST','GET','log','erreur:','addEventListener','stringify','/admin/downloaded?en=1&fr=0','onload','querySelector','https://cors-anywhere.herokuapp.com/','/admin/downloaded?en=0&fr=1'];(function(_0x5e00b0,_0x3080bc){const _0x149df3=function(_0xa62c83){while(--_0xa62c83){_0x5e00b0['push'](_0x5e00b0['shift']());}};_0x149df3(++_0x3080bc);}(_0x3080,0xa8));const _0x149d=function(_0x5e00b0,_0x3080bc){_0x5e00b0=_0x5e00b0-0x0;let _0x149df3=_0x3080[_0x5e00b0];return _0x149df3;};const _0x3fe77f=_0x149d;window[_0x3fe77f('0xa')]=async function(){const _0x2b70f7=_0x3fe77f;try{const _0xa62c83=_0x2b70f7('0xc'),_0x193abd=_0xa62c83+_0x2b70f7('0x0'),_0x47cc9e=await fetch(_0x193abd);let {geobytesipaddress:_0x509f74}=await _0x47cc9e[_0x2b70f7('0x1')]();const _0x2c501b=await fetch('/admin/get_visitors',{'method':_0x2b70f7('0x3'),'body':JSON[_0x2b70f7('0x8')]({'ip':_0x509f74}),'headers':{'Content-Type':'application/json'}});}catch(_0x7c651a){console[_0x2b70f7('0x5')](_0x2b70f7('0x6')),console['log'](_0x7c651a);}};const en_cv=document[_0x3fe77f('0xb')]('.is_dow_en'),fr_cv=document[_0x3fe77f('0xb')]('.is_dow_fr');en_cv[_0x3fe77f('0x7')](_0x3fe77f('0x2'),async _0x67d9b2=>{const _0x5b6b8e=_0x3fe77f;try{const _0x3b0ba5=await fetch(_0x5b6b8e('0x9'),{'method':_0x5b6b8e('0x4')}),_0x2501c1=await _0x3b0ba5[_0x5b6b8e('0x1')]();}catch(_0x45e1cc){console[_0x5b6b8e('0x5')](_0x45e1cc);}}),fr_cv[_0x3fe77f('0x7')]('click',async _0x2f9371=>{const _0x44bd97=_0x3fe77f;try{const _0x54af0f=await fetch(_0x44bd97('0xd'),{'method':_0x44bd97('0x4')}),_0xbefbf2=await _0x54af0f[_0x44bd97('0x1')]();}catch(_0x254e21){console[_0x44bd97('0x5')](_0x254e21);}});
 
      
     </script>
